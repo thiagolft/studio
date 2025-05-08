@@ -1,3 +1,5 @@
+import { searchBibleVerse, type SearchBibleVerseOutput } from '@/ai/flows/search-bible-verse-flow';
+
 /**
  * Representa um versículo bíblico.
  */
@@ -21,56 +23,36 @@ export interface Verse {
 }
 
 /**
- * Recupera de forma assíncrona um versículo bíblico com base em uma consulta de pesquisa.
- * Esta é uma implementação simulada.
+ * Recupera de forma assíncrona um versículo bíblico com base em uma consulta de pesquisa usando Genkit AI.
  *
  * @param query A consulta de pesquisa (ex: "João 3:16", "amor", "fé").
- * @returns Uma promessa que resolve para um objeto Verse.
+ * @returns Uma promessa que resolve para um objeto Verse, ou null se ocorrer um erro grave ou nenhum texto for retornado.
  */
-export async function getVerse(query: string): Promise<Verse> {
-  console.log(`Buscando versículo para: "${query}" (simulado)`);
+export async function getVerse(query: string): Promise<Verse | null> {
+  console.log(`Buscando versículo para: "${query}" (usando Genkit AI)`);
   
-  // Simulação de uma chamada de API com um pequeno atraso
-  await new Promise(resolve => setTimeout(resolve, 500));
+  try {
+    // Simulate network delay for loading state visibility - can be removed for production
+    // await new Promise(resolve => setTimeout(resolve, 500));
 
-  const queryLower = query.toLowerCase();
+    const result: SearchBibleVerseOutput = await searchBibleVerse({ query });
 
-  if (queryLower.includes("joão 3:16") || queryLower.includes("deus amou o mundo")) {
-    return {
-      book: 'João',
-      chapter: 3,
-      verse: 16,
-      text: 'Porque Deus amou o mundo de tal maneira que deu o seu Filho unigênito, para que todo aquele que nele crê não pereça, mas tenha a vida eterna.',
-    };
-  } else if (queryLower.includes("salmos 23") || queryLower.includes("senhor é meu pastor")) {
-    return {
-      book: 'Salmos',
-      chapter: 23,
-      verse: 1,
-      text: 'O Senhor é o meu pastor; nada me faltará.',
-    };
-  } else if (queryLower.includes("fé") || queryLower.includes("hebreus 11:1")) {
-    return {
-      book: 'Hebreus',
-      chapter: 11,
-      verse: 1,
-      text: 'Ora, a fé é o firme fundamento das coisas que se esperam, e a prova das coisas que se não veem.',
-    };
-  } else if (queryLower.includes("amor")) {
-     return {
-      book: '1 Coríntios',
-      chapter: 13,
-      verse: 4,
-      text: 'O amor é paciente, o amor é bondoso. Não inveja, não se vangloria, não se orgulha.',
-    };
+    if (result && result.text) { // Check if text is populated, as per prompt instructions
+      return {
+        book: result.book,
+        chapter: result.chapter,
+        verse: result.verse,
+        text: result.text,
+        // The 'found' field from SearchBibleVerseOutput can be used by the caller if needed,
+        // but for now, as long as we have text, we return a Verse.
+      };
+    }
+    // If LLM returns no text, even for a fallback, treat as not found by the action.
+    console.warn(`Genkit flow returned no text for query: "${query}". Result:`, result);
+    return null;
+  } catch (error) {
+    console.error(`Erro ao buscar versículo com Genkit para "${query}":`, error);
+    // Propagate the error to be handled by the server action, which has a generic error message.
+    throw error; 
   }
-
-
-  // Versículo padrão caso a busca não corresponda a nada específico
-  return {
-    book: 'Filipenses',
-    chapter: 4,
-    verse: 13,
-    text: 'Tudo posso naquele que me fortalece.',
-  };
 }
