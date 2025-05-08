@@ -1,8 +1,7 @@
 
 "use client";
 
-import { useFormState } from 'react-dom';
-import { useEffect, useState, useMemo } from 'react';
+import { useActionState, useEffect, useState, useMemo } from 'react';
 import { AppHeader } from '@/components/BíbliaStatus/AppHeader';
 import { SearchVerseForm } from '@/components/BíbliaStatus/SearchVerseForm';
 import { VerseDisplayCard } from '@/components/BíbliaStatus/VerseDisplayCard';
@@ -20,7 +19,7 @@ const inspirationalQuotes = [
 ];
 
 export default function BibliaStatusPage() {
-  const [formState, formAction] = useFormState<SearchState | undefined, FormData>(searchVerseAction, undefined);
+  const [formState, formAction] = useActionState<SearchState | undefined, FormData>(searchVerseAction, undefined);
   const [showContent, setShowContent] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   
@@ -106,3 +105,4 @@ export default function BibliaStatusPage() {
     </div>
   );
 }
+
