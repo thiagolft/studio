@@ -10,7 +10,7 @@ export function AppHeader() {
           Bíblia Status
         </h1>
       </div>
-      <p className="mt-2 text-lg text-muted-foreground">
+      <p className="mt-2 text-lg text-center text-muted-foreground">
         Seu versículo diário para inspirar e compartilhar, entregue com carinho por Amanda de Freitas Barbosa.
       </p>
     </header>
