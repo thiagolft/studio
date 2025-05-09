@@ -99,7 +99,7 @@ export default function BibliaStatusPage() {
         </div>
       </main>
       <footer className="py-8 text-center text-muted-foreground text-sm">
-        <p>Feito com <span className="text-red-500">❤️</span> para minha namorada.</p>
+        <p>Feito com <span className="text-red-500">❤️</span> para minha namorada Amanda de Freitas Barbosa.</p>
         <p>&copy; {new Date().getFullYear()} Bíblia Status. Todos os direitos reservados.</p>
       </footer>
     </div>
